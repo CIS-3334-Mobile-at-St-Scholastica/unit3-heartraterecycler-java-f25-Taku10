@@ -3,6 +3,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
     // TODO: In Unit 5 will will replace the editText with a RecycleView
     Button buttonInsert;
     MainViewModel mainViewModel;
+    RecyclerView heartrateRecyclerView;
+    HeartrateAdapter heartrateAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +34,20 @@ public class MainActivity extends AppCompatActivity {
 
         editTextAge = findViewById(R.id.editTextAge);
         editTextPulse = findViewById(R.id.editTextPulse);
-        editTextDisplay = findViewById(R.id.editTextDisplay);
+//        editTextDisplay = findViewById(R.id.editTextDisplay);
 
         setupInsertButton();            // Set up the OnClickListener for the insert button
         setupLiveDataObserver();
+        setupRecyclerView();
     }
 
+
+    private void setupRecyclerView() {
+        heartrateRecyclerView = findViewById(R.id.RecyclerView);
+        heartrateRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        heartrateAdapter = new HeartrateAdapter(getApplication(), mainViewModel);
+        heartrateRecyclerView.setAdapter(heartrateAdapter);
+    }
     private void setupLiveDataObserver() {
         // Create the observer for the list of heart rates
         mainViewModel.getAllHeartrates().observe(this, new Observer<List<Heartrate>>() {
@@ -44,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("CIS 3334", "MainActivity -- LiveData Observer -- Number of Pizzas = "+allHeartrates.size());
                 editTextDisplay.setText("Number of heartrates = "+allHeartrates.size());
                 // TODO: update the RecycleView Array Adapter
+              heartrateAdapter.setHeartrates(allHeartrates);
+                heartrateAdapter.notifyDataSetChanged();
             }
         });
     }

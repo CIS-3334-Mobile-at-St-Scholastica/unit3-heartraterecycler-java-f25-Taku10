@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Java_Heartrate_Start</string>
+    <string name="pulse">Pulse:</string>
+    <string name="range">Range:</string>
 </resources>
